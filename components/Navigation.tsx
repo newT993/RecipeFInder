@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
-import Image from 'next/image'
 import { useState } from 'react'
 import { FiMenu, FiX } from 'react-icons/fi'
 const sidebarLinks = [
@@ -29,8 +28,7 @@ const sidebarLinks = [
 ]
 
 const Navigation = () => {
-  const { isAuthenticated, logout } = useAuth()
-  const router = useRouter()
+  const { isAuthenticated } = useAuth()
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 

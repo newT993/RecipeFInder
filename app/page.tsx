@@ -13,7 +13,6 @@ import Link from "next/link"
 import { FaUtensils, FaSave, FaSearch } from "react-icons/fa"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
-import Carousel from '@/components/carousel'
 
 const Home = () => {
   const [isLoaded, setIsLoaded] = useState(false)

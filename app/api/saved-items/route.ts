@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { verifyToken } from '@/lib/jwt'
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const cookieStore = cookies()
     const token = (await cookieStore).get('auth_token')

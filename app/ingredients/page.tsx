@@ -32,16 +32,6 @@ const api = {
     return res.json()
   },
 
-  update: async (ingredient: Partial<Ingredient> & { id: string }) => {
-    const res = await fetch('/api/ingredients', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(ingredient),
-    })
-    if (!res.ok) throw new Error('Failed to update ingredient')
-    return res.json()
-  },
-
   delete: async (id: string) => {
     const res = await fetch(`/api/ingredients?id=${id}`, { method: 'DELETE' })
     if (!res.ok) throw new Error('Failed to delete ingredient')
@@ -53,6 +43,29 @@ const Ingredients = () => {
   const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [searchingRecipe, setSearchingRecipe] = useState<string | null>(null)
+  
+  // Add this function before the return statement
+  const handleBrowseRecipe = async (ingredientName: string) => {
+    try {
+      setSearchingRecipe(ingredientName)
+      const response = await fetch(`/api/recipes?query=${encodeURIComponent(ingredientName)}`)
+      if (!response.ok) throw new Error('Failed to fetch recipes')
+      
+      const recipes = await response.json()
+      if (recipes.length > 0) {
+        // Navigate to the first recipe that matches the ingredient
+        window.open(`/recipe/${recipes[0].id}`, '_blank')
+      } else {
+        alert('No recipes found with this ingredient')
+      }
+    } catch (error) {
+      console.error('Error searching recipes:', error)
+      alert('Failed to search recipes')
+    } finally {
+      setSearchingRecipe(null)
+    }
+  }
 
   // Fetch ingredients and saved items
   useEffect(() => {
@@ -101,15 +114,6 @@ const Ingredients = () => {
       }
     }
 
-  const handleUpdate = async (updatedIngredient: Partial<Ingredient> & { id: string }) => {
-    try {
-      const updated = await api.update(updatedIngredient)
-      setIngredients(prev => prev.map(ing => ing.id === updated.id ? updated : ing))
-      setError(null)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update ingredient')
-    }
-  }
 
   const handleDelete = async (id: string) => {
     try {
@@ -197,8 +201,16 @@ const Ingredients = () => {
                 ⏳ In {Math.ceil((new Date(item.expiryDate!).getTime() - Date.now()) / (1000 * 60 * 60 * 24))} days
               </p>
               <div className="flex gap-2 mt-2">
-                <button className="bg-teal-500 cursor-pointer text-white flex-1 p-2 rounded">
-                  Browse Recipe
+                <button 
+                  onClick={() => handleBrowseRecipe(item.name)}
+                  disabled={searchingRecipe === item.name}
+                  className="bg-teal-500 cursor-pointer text-white flex-1 p-2 rounded disabled:bg-teal-300 disabled:cursor-not-allowed"
+                >
+                  {searchingRecipe === item.name ? (
+                    <span>Searching...</span>
+                  ) : (
+                    <span>Browse Recipe</span>
+                  )}
                 </button>
                 <button 
                   onClick={() => handleDelete(item.id)}

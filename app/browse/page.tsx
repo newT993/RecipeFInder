@@ -1,8 +1,7 @@
 'use client'
 import RecipeCard from '@/components/RecipeCard'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Footer from '@/components/Footer'
 import { motion } from 'framer-motion' // Import motion from framer-motion
 
 interface Meal {
@@ -12,7 +11,7 @@ interface Meal {
   strInstructions: string
 }
 
-const Browse = () => {
+const BrowseContent = () => {
   const [meals, setMeals] = useState<Meal[]>([])
   const [loading, setLoading] = useState(true)
   const [totalPages, setTotalPages] = useState(0)
@@ -65,7 +64,7 @@ const Browse = () => {
       <h1 className="text-3xl font-bold mb-6 text-blue-900">Browse Recipes</h1>
       <section className="mb-8">
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 grid-cols-4 gap-6"
           initial="hidden"
           animate="visible"
           variants={{
@@ -134,6 +133,14 @@ const Browse = () => {
         </button>
       </motion.div>
     </motion.div>
+  )
+}
+
+const Browse = () => {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-64">Loading...</div>}>
+      <BrowseContent />
+    </Suspense>
   )
 }
 

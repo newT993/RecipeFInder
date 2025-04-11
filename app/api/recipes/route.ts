@@ -1,13 +1,22 @@
 import { NextResponse } from 'next/server'
 
 const MEALDB_API_URL = 'https://www.themealdb.com/api/json/v1/1'
+interface Meal {
+  idMeal: string;
+  strMeal: string;
+  strInstructions: string;
+  strMealThumb: string;
+  strCategory: string;
+  strArea: string;
+  [key: string]: string | undefined; // For dynamic ingredient/measure properties
+}
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const query = searchParams.get('query') || ''
     
-    let endpoint = `${MEALDB_API_URL}/search.php?s=${query}`
+    const endpoint = `${MEALDB_API_URL}/search.php?s=${query}`
     
     // If no search query, fetch random meals
     if (!query) {
@@ -45,7 +54,7 @@ export async function GET(request: Request) {
     }
 
     // Format the response
-    const formattedMeals = data.meals.map((meal: any) => ({
+    const formattedMeals = data.meals.map((meal: Meal) => ({
       id: meal.idMeal,
       name: meal.strMeal,
       description: meal.strInstructions?.slice(0, 200) + '...',
@@ -67,7 +76,7 @@ export async function GET(request: Request) {
 }
 
 // Helper function to extract ingredients and measurements
-function getIngredients(meal: any) {
+function getIngredients(meal: Meal) {
   const ingredients = []
   for (let i = 1; i <= 20; i++) {
     const ingredient = meal[`strIngredient${i}`]

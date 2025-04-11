@@ -2,12 +2,16 @@ import jwt from 'jsonwebtoken'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 
-export function createToken(payload: any): string {
+interface JWTPayload {
+  userId: string;
+  [key: string]: unknown; // Allow for additional properties
+}
+
+export function createToken(payload: JWTPayload): string {
   return jwt.sign(payload, JWT_SECRET, {
     expiresIn: '7d', // Token expires in 7 days
   })
 }
-
 
 export async function verifyToken(token: string): Promise<{ userId: string }> {
   try {
