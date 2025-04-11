@@ -9,10 +9,10 @@ const Header = () => {
   const router = useRouter();
   const handleLogout = async () => {
     await logout();
-    router.push('/login');
+    router.push('/');
   };
   return (
-    <header className="mb-8 flex justify-between items-center p-4  bg-white shadow-md rounded-lg">
+    <header className="mb-2 flex justify-between items-center p-4 text-blue-900 border-teal-500 rounded-lg">
         <div >
           <h1 className="text-4xl font-bold">Recipe Finder App</h1>
           <p className="text-lg text-gray-600">Find recipes based on ingredients you have!</p>

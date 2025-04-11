@@ -89,7 +89,7 @@ export default function MealDetail() {
           Back to Browse
         </button>
 
-        <div className="relative bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="relative bg-grey-50 rounded-xl shadow-lg overflow-hidden">
           <div className="relative h-96">
             <img
               src={meal?.strMealThumb}
@@ -114,21 +114,21 @@ export default function MealDetail() {
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex-1">
                 <div className="flex gap-2 mb-4">
-                  <span className="bg-gray-100 px-3 py-1 rounded-full">
+                  <span className="bg-teal-300 px-3 py-1 rounded-full">
                     {meal?.strCategory}
                   </span>
-                  <span className="bg-gray-100 px-3 py-1 rounded-full">
+                  <span className="bg-teal-300 px-3 py-1 rounded-full">
                     {meal?.strArea}
                   </span>
                 </div>
 
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
+                  <h2 className="text-xl font-semibold mb-2 text-blue-900">Ingredients</h2>
                   <ul className="space-y-1">
                     {ingredients.map((ingredient, index) => (
                       <li 
                         key={index} 
-                        className="hover:bg-gray-100 p-1 rounded transition-colors"
+                        className="hover:bg-teal-100 p-1 rounded transition-colors"
                       >
                         {ingredient}
                       </li>
@@ -138,7 +138,7 @@ export default function MealDetail() {
               </div>
 
               <div className="flex-1">
-                <h2 className="text-xl font-semibold mb-2">Instructions</h2>
+                <h2 className="text-xl font-semibold mb-2 text-blue-900">Instructions</h2>
                 <p className="whitespace-pre-line text-gray-700">
                   {meal?.strInstructions}
                 </p>

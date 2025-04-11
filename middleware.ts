@@ -34,11 +34,19 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard') ||
                           request.nextUrl.pathname.startsWith('/saved')
   
-  if (isProtectedRoute && !authToken) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
+  // if (isProtectedRoute && !authToken) {
+  //   return NextResponse.redirect(new URL('/login', request.url))
+  // }
 
-  return NextResponse.next()
+  if (isProtectedRoute && !authToken) {
+    const response = NextResponse.redirect(new URL('/login', request.url));
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    return response;
+  }
+  // return NextResponse.next()
+  const response = NextResponse.next();
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  return response;
 }
 
 export const config = {

@@ -36,7 +36,7 @@ export default function RootLayout({
           <main className="flex h-full relative">
             
             <Navigation />
-            <div className="flex-1 ml-64 bg-lightGray px-4 md:px-8 lg:px-12 overflow-y-auto">
+            <div className="flex-1 md:ml-64 bg-gradient-to-r from-green-200 via-emerald-300 to-teal-400 px-4 md:px-8 lg:px-12 overflow-y-auto">
               <Header/>
               {children}
             </div>

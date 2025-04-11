@@ -23,15 +23,16 @@ model User {
 
 model Recipe {
   id           String             @id @default(cuid())
-  title        String
-  description  String
-  instructions String
+  name         String             // Recipe name
+  description  String             // Recipe description
+  imageUrl     String             // URL for the recipe image
+  instructions String             // Cooking instructions
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
-  userId       String
+  userId       String             // User who created the recipe
   user         User               @relation(fields: [userId], references: [id])
-  ingredients  RecipeIngredient[]
-  favoritedBy  User[]             @relation("UserFavorites")
+  ingredients  RecipeIngredient[] // Many-to-many relation with ingredients
+  favoritedBy  User[]             @relation("UserFavorites") // Users who favorited this recipe
 }
 
 model RecipeIngredient {
@@ -55,17 +56,15 @@ model UserIngredient {
 
 model Ingredient {
   id                String             @id @default(cuid())
-  name              String
-  quantity          String
-  expiryDate        DateTime?
-  purchaseDate      DateTime           @default(now())
-  categoryId        String
-  userId            String
+  name              String             // Ingredient name
+  quantity          String             // Quantity of the ingredient
+  expiryDate        DateTime?          // Optional expiry date
+  purchaseDate      DateTime           @default(now()) // Purchase date
+  categoryId        String             // Category ID
+  userId            String?            // Optional user ID (for user-specific ingredients)
   category          Category           @relation(fields: [categoryId], references: [id])
-  user              User               @relation(fields: [userId], references: [id])
-  recipeIngredients RecipeIngredient[]
-
-  @@index([userId])
+  user              User?              @relation(fields: [userId], references: [id])
+  recipeIngredients RecipeIngredient[] // Many-to-many relation with recipes
 }
 
 model Category {
@@ -85,3 +84,4 @@ model SavedItem {
   createdAt  DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id])
 }
+

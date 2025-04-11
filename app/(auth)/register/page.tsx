@@ -1,35 +1,40 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('') // State for error message
+  const { register } = useAuth()
   const router = useRouter()
-  const {register}= useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password !== confirmPassword) {
-      alert('Passwords do not match')
+      setErrorMessage('Passwords do not match') // Set error message
       return
     }
-    
     try {
-      // Add your registration logic here
       await register(email, password)
-      router.push('/login')
+      console.log('Registration successful', email)
+      router.push('/dashboard')
     } catch (error) {
+      setErrorMessage('Registration failed. Please try again.') // Set error message
       console.error('Registration failed:', error)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="absolute top-0 left-0 w-full min-h-screen z-60 overflow-y-hidden flex items-center justify-center bg-white">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
-        <h2 className="text-3xl font-bold text-center">Create Account</h2>
+        <h2 className="text-3xl font-bold text-center">Register</h2>
+        {errorMessage && ( // Display error message
+          <div className="text-red-500 text-sm text-center">{errorMessage}</div>
+        )}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium">
@@ -69,6 +74,11 @@ export default function RegisterPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
+          </div>
+          <div>
+            <Link href="/login" className="text-sm text-blue-600 hover:text-blue-500">
+              Already have an account? Sign in here
+            </Link>
           </div>
           <button
             type="submit"

@@ -2,10 +2,12 @@
 import { useState } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('') // State for error message
   const { login } = useAuth()
   const router = useRouter()
 
@@ -16,14 +18,18 @@ export default function LoginPage() {
       console.log('Login successful', email)
       router.push('/dashboard')
     } catch (error) {
+      setErrorMessage('Invalid email or password') // Set error message
       console.error('Login failed:', error)
     }
   }
 
   return (
-    <div className="absolute top-0 left-0 w-full min-h-screen z-10 overflow-y-hidden flex items-center justify-center bg-gray-50">
+    <div className="absolute top-0 left-0 w-full min-h-screen z-60 overflow-y-hidden flex items-center justify-center bg-white">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
         <h2 className="text-3xl font-bold text-center">Sign in</h2>
+        {errorMessage && ( // Display error message
+          <div className="text-red-500 text-sm text-center">{errorMessage}</div>
+        )}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium">
@@ -50,6 +56,11 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+          </div>
+          <div>
+            <Link href="/register" className="text-sm text-blue-600 hover:text-blue-500">
+              Don't have an account? Register here
+            </Link>
           </div>
           <button
             type="submit"

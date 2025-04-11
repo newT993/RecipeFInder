@@ -8,14 +8,22 @@ export function createToken(payload: any): string {
   })
 }
 
-export function verifyToken(token: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(decoded)
-      }
-    })
-  })
+
+export async function verifyToken(token: string): Promise<{ userId: string }> {
+  try {
+    const secret = process.env.JWT_SECRET
+    if (!secret) {
+      throw new Error('JWT_SECRET is not defined')
+    }
+    
+    const verified = jwt.verify(token, secret)
+    if (typeof verified === 'string') {
+      throw new Error('Invalid token format')
+    }
+    
+    return verified as { userId: string }
+  } catch (error) {
+    console.error('Token verification failed:', error)
+    throw error
+  }
 }

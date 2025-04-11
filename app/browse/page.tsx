@@ -3,6 +3,7 @@ import RecipeCard from '@/components/RecipeCard'
 import React, { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Footer from '@/components/Footer'
+import { motion } from 'framer-motion' // Import motion from framer-motion
 
 interface Meal {
   idMeal: string
@@ -24,17 +25,14 @@ const Browse = () => {
     const fetchMeals = async () => {
       try {
         setLoading(true)
-        // Fetch all meals first (API doesn't support pagination directly)
         const response = await fetch(
           'https://www.themealdb.com/api/json/v1/1/search.php?s='
         )
         const data = await response.json()
-        
-        // Calculate total pages
+
         const total = Math.ceil(data.meals.length / itemsPerPage)
         setTotalPages(total)
-        
-        // Implement client-side pagination
+
         const start = (currentPage - 1) * itemsPerPage
         const end = start + itemsPerPage
         const paginatedMeals = data.meals.slice(start, end)
@@ -58,24 +56,57 @@ const Browse = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 relative">
-      <h1 className="text-3xl font-bold mb-6">Browse Recipes</h1>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }} // Initial animation state
+      animate={{ opacity: 1, y: 0 }} // Final animation state
+      transition={{ duration: 0.5 }} // Animation duration
+      className="container mx-auto p-4 relative"
+    >
+      <h1 className="text-3xl font-bold mb-6 text-blue-900">Browse Recipes</h1>
       <section className="mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0, scale: 0.9 },
+            visible: {
+              opacity: 1,
+              scale: 1,
+              transition: {
+                staggerChildren: 0.1, // Stagger animation for child elements
+              },
+            },
+          }}
+        >
           {meals.map((meal) => (
-            <RecipeCard
+            <motion.div
               key={meal.idMeal}
-              title={meal.strMeal}
-              description={meal.strInstructions.substring(0, 150) + '...'}
-              imageUrl={meal.strMealThumb}
-              id={meal.idMeal}
-            />
+              whileHover={{ scale: 1.05 }} // Animation on hover
+              whileTap={{ scale: 0.95 }} // Animation on tap
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 },
+              }}
+            >
+              <RecipeCard
+                title={meal.strMeal}
+                description={meal.strInstructions.substring(0, 150) + '...'}
+                imageUrl={meal.strMealThumb}
+                id={meal.idMeal}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Pagination */}
-      <div className="flex justify-center gap-2 mt-8">
+      <motion.div
+        className="flex justify-center gap-2 mt-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -101,8 +132,8 @@ const Browse = () => {
         >
           Next
         </button>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
 

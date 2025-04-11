@@ -70,26 +70,55 @@ export async function POST(request: Request) {
     const cookieStore = cookies()
     const token = (await cookieStore).get('auth_token')
 
-    if (!token) {
+    if (!token || !token.value) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: 'Unauthorized - No valid token' },
         { status: 401 }
       )
     }
 
     const payload = await verifyToken(token.value)
+    if (!payload || !payload.userId) {
+      return NextResponse.json(
+        { error: 'Invalid token payload' },
+        { status: 401 }
+      )
+    }
+
     const userId = payload.userId
-
     const body = await request.json()
+    
+    // Validate required fields
     const { name, quantity, categoryId, expiryDate } = body
+    
+    if (!name || !quantity || !categoryId) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
 
+    // Validate category exists
+    const categoryExists = await prisma.category.findUnique({
+      where: { id: categoryId }
+    })
+
+    if (!categoryExists) {
+      return NextResponse.json(
+        { error: 'Invalid category ID' },
+        { status: 400 }
+      )
+    }
+
+    // Create ingredient with validated data
     const ingredient = await prisma.ingredient.create({
       data: {
-        name,
-        quantity,
-        categoryId,
+        name: String(name),
+        quantity: String(quantity),
+        categoryId: String(categoryId),
+        userId: String(userId),
         expiryDate: expiryDate ? new Date(expiryDate) : null,
-        userId,
+        purchaseDate: new Date(),
       },
       include: {
         category: true,
@@ -99,6 +128,12 @@ export async function POST(request: Request) {
     return NextResponse.json(ingredient)
   } catch (error) {
     console.error('Error creating ingredient:', error)
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      )
+    }
     return NextResponse.json(
       { error: 'Failed to create ingredient' },
       { status: 500 }

@@ -10,7 +10,7 @@ interface RecipeCardProps {
 const RecipeCard: React.FC<RecipeCardProps> = ({ id, title, description, imageUrl }) => {
   return (
     <Link href={`/browse/${id}`}>
-      <div className="bg-white rounded-lg hover:shadow-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+      <div className="bg-white rounded-lg cursor-pointer hover:shadow-lg shadow-md overflow-hidden transition-transform hover:scale-105">
         {imageUrl && (
           <img
             src={imageUrl}
