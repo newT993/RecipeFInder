@@ -5,6 +5,9 @@ const nextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true, // Only use temporarily for debugging
+  },
+  experimental: {
+    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs']
   }
 }
 
