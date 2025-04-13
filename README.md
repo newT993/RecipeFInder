@@ -1,17 +1,23 @@
 Receipt Finder App
+
 A Next.js application for managing recipes and ingredients with expiry date tracking. Currently under active development.
 
-🚧 Development Status
+🚧 Development Status 
+
 ✅ Basic application structure
-✅ Authentication system
-❌ Database functionality (In Progress)
-❌ Recipe management ( can work if db on vercel works(neon))
-❌ Ingredient tracking
+
+✅ Authentication system (google in progress)
+
+✅ Database functionality (with Email Credentials)
+
+✅ Recipe management 
+
+✅ Ingredient tracking
+
 🔧 Known Issues
 
-Database functions are currently not working in production (Vercel deployment)
+Google login is currently not working 
 Local development works with PostgreSQL
-Working on fixing Neon PostgreSQL integration<br>
 
 🛠️ Tech Stack
 Next.js 14
@@ -45,6 +51,11 @@ Set up environment variables Create a .env file in the root directory:
 DATABASE_URL="your-postgresql-url"
 DIRECT_URL="your-direct-connection-url"
 JWT_SECRET="your-secret-key"
+GOOGLE_CLIENT_ID="google-client-id"
+GOOGLE_CLIENT_SECRET="google-secret"
+NEXTAUTH_URL="your-nextauth-url"
+NEXTAUTH_SECRET="your-nextauth-secret"
+NEXTAUTH_URL_INTERNAL="your-next-url-internal"
 ```
 Generate Prisma Client
 ```
@@ -56,7 +67,7 @@ npm run dev
 ```
 
 🌐 Deployment
-The application is deployed on Vercel but currently experiencing database connectivity issues. We're working on resolving these with Neon PostgreSQL integration.
+The application is deployed on Vercel but currently experiencing google login and some database connectivity issues. 
 
 🤝 Contributing
 Feel free to contribute by:
@@ -67,7 +78,6 @@ Making your changes
 Submitting a pull request
 
 ⚠️ Current Development Focus
-Fixing database connectivity issues in production
 Implementing proper error handling
 Completing user authentication flow
 Adding recipe management features
