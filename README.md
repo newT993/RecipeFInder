@@ -1,4 +1,4 @@
-Receipt Finder App [Vercel](https://recipe-finder-six-xi.vercel.app/)
+Receipt Finder App => [Vercel](https://recipe-finder-six-xi.vercel.app/)
 
 A Next.js application for managing recipes and ingredients with expiry date tracking. Currently under active development.
 
